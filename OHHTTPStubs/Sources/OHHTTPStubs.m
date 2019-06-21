@@ -306,7 +306,7 @@ static NSTimeInterval const kSlotTime = 0.25; // Must be >0. We will send a chun
     OHHTTPStubsDescriptor* foundStub = nil;
     @synchronized(_stubDescriptors)
     {
-        for(OHHTTPStubsDescriptor* stub in _stubDescriptors.reverseObjectEnumerator)
+        for(OHHTTPStubsDescriptor* stub in _stubDescriptors)
         {
             if (stub.testBlock(request))
             {

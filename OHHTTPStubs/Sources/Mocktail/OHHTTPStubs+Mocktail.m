@@ -63,6 +63,9 @@ NSString* const MocktailErrorDomain = @"Mocktail";
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSArray *fileURLs = [fileManager contentsOfDirectoryAtURL:dirURL includingPropertiesForKeys:nil options:0 error:&bError];
 
+    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"absoluteString" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+    fileURLs = [fileURLs sortedArrayUsingDescriptors:@[sort]];
+
     if (bError)
     {
         if (error)
@@ -80,6 +83,7 @@ NSString* const MocktailErrorDomain = @"Mocktail";
         {
             continue;
         }
+
         id<OHHTTPStubsDescriptor> descriptor = [[self class] stubRequestsUsingMocktail:fileURL error: &bError];
         if (descriptor && !bError)
         {
@@ -222,7 +226,7 @@ NSString* const MocktailErrorDomain = @"Mocktail";
 
     return [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         NSString *absoluteURL = (request.URL).absoluteString;
-        NSString *method = request.HTTPMethod;
+        NSString *method = request.HTTPMethod;
 
         if ([absoluteURLRegex numberOfMatchesInString:absoluteURL options:0 range:NSMakeRange(0, absoluteURL.length)] > 0)
         {
